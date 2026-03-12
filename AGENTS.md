@@ -1,26 +1,35 @@
----
-name: gnnwr-spatial-analysis
-description: Use when analyzing spatial or spatiotemporal data with geographic non-stationarity, building GNNWR/GTNNWR models, generating spatial coefficient maps, or interpreting geographically varying regression results. Triggers on keywords like spatial regression, GWR, GNNWR, spatial non-stationarity, geographic weighting, coefficient mapping, PM2.5 spatial modeling, land price spatial analysis.
-license: MIT
-metadata:
-  author: SteadfastAsArt
-  version: "1.0.0"
----
-
 # GNNWR Spatial Intelligent Analysis
 
-Spatial/spatiotemporal regression with GNNWR (Geographically Neural Network Weighted Regression). Produces publication-ready coefficient maps and diagnostic reports.
+**Version 1.0.0**
 
-## Quick Reference
+> **Note:**
+> This document is for AI coding agents (Codex, Gemini CLI, Amp, Claude Code, Cursor, etc.)
+> to follow when working with GNNWR spatial regression tasks.
+> Humans may also find it useful as a quick reference.
+
+## When to Apply
+
+Reference these guidelines when:
+- Analyzing spatial or spatiotemporal data with geographic non-stationarity
+- Building GNNWR / GTNNWR regression models
+- Generating spatial coefficient maps or diagnostic reports
+- Working with large-scale geographic datasets (N > 10k)
+- Interpreting geographically varying regression results
+
+## Prerequisites
+
+```bash
+pip install gnnwr
+```
+
+---
+
+## 1. Quick Start
 
 ```python
 from gnnwr import models, datasets, utils
 import pandas as pd
-```
 
-### Data → Model → Results (Minimal)
-
-```python
 data = pd.read_csv("data.csv")
 
 train, val, test = datasets.init_dataset(
@@ -33,7 +42,7 @@ train, val, test = datasets.init_dataset(
 model = models.GNNWR(train, val, test, use_gpu=True, optimizer="Adam", start_lr=0.01)
 model.run(max_epoch=200, early_stop=30)
 
-result = model.reg_result(only_return=True)  # DataFrame: coef_x1, coef_x2, ..., Pred_y, denormalized_pred_result
+result = model.reg_result(only_return=True)  # DataFrame: coef_x1, coef_x2, ..., Pred_y
 print(model.result())                         # R², AIC, RMSE, F-tests summary
 ```
 
@@ -58,9 +67,11 @@ train, val, test = datasets.init_dataset(
 # Memory: N=100k full=55GB → knn_k=2000 only 763MB
 ```
 
-## API Essentials
+---
 
-### init_dataset Key Parameters
+## 2. API Reference
+
+### 2.1 init_dataset Key Parameters
 
 | Parameter | Default | Notes |
 |-----------|---------|-------|
@@ -70,7 +81,7 @@ train, val, test = datasets.init_dataset(
 | `Reference` | None | "train", "train_val", or custom DataFrame |
 | `sample_seed` | 42 | Reproducibility |
 
-### Model Hyperparameters
+### 2.2 Model Hyperparameters
 
 | Parameter | Recommended | Notes |
 |-----------|-------------|-------|
@@ -82,7 +93,7 @@ train, val, test = datasets.init_dataset(
 | `batch_norm` | True | Stabilizes training |
 | `use_ols` | True | OLS-initialized output layer |
 
-### Diagnostics (DIAGNOSIS)
+### 2.3 Diagnostics (DIAGNOSIS)
 
 ```python
 diag = model._test_diagnosis
@@ -95,11 +106,13 @@ diag.F2_Global()    # spatial weight significance
 diag.F3_Local()     # per-variable significance → (dict1, dict2)
 ```
 
-`lite=True` (auto when N>10k): only R²/RMSE; Hat-matrix diagnostics skipped.
+`lite=True` (auto when N>10k): only R²/RMSE available; Hat-matrix diagnostics skipped.
 
-## Visualization Patterns
+---
 
-### 1. Folium Interactive Maps (built-in)
+## 3. Visualization Patterns
+
+### 3.1 Folium Interactive Maps (built-in)
 
 ```python
 viz = utils.Visualize(model, lon_lat_columns=["lon", "lat"], zoom=5)
@@ -117,11 +130,10 @@ for col in [c for c in result.columns if c.startswith("coef_")]:
 m3 = viz.dot_map(result, "lon", "lat", "denormalized_pred_result", zoom=5)
 ```
 
-### 2. Matplotlib Static Maps (publication-ready)
+### 3.2 Matplotlib Static Maps (publication-ready)
 
 ```python
 import matplotlib.pyplot as plt
-import matplotlib.colors as mcolors
 import numpy as np
 
 result = model.reg_result(only_return=True)
@@ -145,7 +157,7 @@ plt.tight_layout()
 plt.savefig("coefficients_map.png", dpi=300, bbox_inches="tight")
 ```
 
-### 3. Residual Spatial Distribution
+### 3.3 Residual Spatial Distribution
 
 ```python
 result["residual"] = result["denormalized_pred_result"] - result[y_column]
@@ -162,7 +174,7 @@ plt.colorbar(sc, ax=ax, label="Residual")
 plt.savefig("residuals_map.png", dpi=300, bbox_inches="tight")
 ```
 
-### 4. Prediction vs Observed Scatter
+### 3.4 Prediction vs Observed Scatter
 
 ```python
 fig, ax = plt.subplots(figsize=(8, 8))
@@ -175,7 +187,7 @@ ax.legend()
 plt.savefig("pred_vs_obs.png", dpi=300, bbox_inches="tight")
 ```
 
-### 5. GeoPandas + Contextily (with basemap)
+### 3.5 GeoPandas + Contextily (with basemap)
 
 ```python
 import geopandas as gpd
@@ -193,7 +205,9 @@ ax.set_axis_off()
 plt.savefig("coef_basemap.png", dpi=300, bbox_inches="tight")
 ```
 
-## Workflow Checklist
+---
+
+## 4. Workflow Checklist
 
 1. **EDA**: Check spatial distribution, feature correlations, OLS baseline
 2. **Data split**: `init_dataset` with appropriate ratios and `sample_seed=42`
@@ -203,7 +217,9 @@ plt.savefig("coef_basemap.png", dpi=300, bbox_inches="tight")
 6. **Interpret**: Where do coefficients vary most? Which variables show strongest non-stationarity? (F3_Local)
 7. **Report**: Model summary table + coefficient maps + diagnostic statistics
 
-## Common Pitfalls
+---
+
+## 5. Common Pitfalls
 
 - **Forgot `spatial_column`**: Model degenerates to global regression
 - **N > 10k without `knn_k`**: OOM on distance matrix; use `knn_k=500–2000`
