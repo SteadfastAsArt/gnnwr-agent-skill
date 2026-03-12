@@ -8,10 +8,11 @@ Compatible with **Claude Code**, **Codex**, **Gemini CLI**, **Cursor**, **Amp**,
 
 Provides AI coding agents with complete API reference and workflow guidance for:
 
-- **GNNWR / GTNNWR** model training and evaluation
-- **Spatial coefficient mapping** (folium interactive maps, matplotlib publication figures, GeoPandas basemaps)
-- **Diagnostic interpretation** (R², AIC, F-tests, residual analysis)
-- **Large-scale datasets** (KNN sparse distance, O(n·k²) DIAGNOSIS)
+- **GNNWR / GTNNWR** model training, hyperparameter tuning, and evaluation
+- **Spatial coefficient mapping** — folium interactive maps, matplotlib publication figures, GeoPandas + Contextily basemaps
+- **Model diagnostics** — R², AIC/AICc, RMSE, F-tests (global & per-variable), residual spatial analysis
+- **Large-scale support** — KNN sparse distance matrices (N=100k+), O(n·k²) DIAGNOSIS without n×n Hat matrix
+- **End-to-end workflow** — from EDA to training to visualization to interpretation, with common pitfalls documented
 
 ## Install
 
@@ -29,7 +30,7 @@ This auto-detects installed agents and creates the appropriate symlinks.
 |-------|------|-------------|
 | Claude Code | `SKILL.md` | `~/.claude/skills/gnnwr-spatial-analysis/SKILL.md` |
 | Codex / Gemini CLI / Amp | `AGENTS.md` | `~/.agents/skills/gnnwr-spatial-analysis/AGENTS.md` |
-| Cursor | `rules/*.md` | `.cursor/rules/gnnwr-spatial-analysis.md` |
+| Cursor / Windsurf | `rules/*.md` | `.cursor/rules/gnnwr-spatial-analysis.md` |
 
 ```bash
 # Claude Code (global)
@@ -45,13 +46,23 @@ mkdir -p .cursor/rules
 cp rules/gnnwr-spatial-analysis.md .cursor/rules/
 ```
 
+## What's covered
+
+| Section | Content |
+|---------|---------|
+| Quick Start | Minimal GNNWR / GTNNWR / KNN mode examples |
+| API Reference | `init_dataset` parameters, model hyperparameters, DIAGNOSIS methods |
+| Visualization | 5 patterns: folium maps, matplotlib coefficient grids, residual maps, pred vs obs, GeoPandas basemaps |
+| Workflow | 7-step checklist: EDA → split → train → diagnose → visualize → interpret → report |
+| Pitfalls | 6 common mistakes with fixes |
+
 ## Structure
 
 ```
 gnnwr-agent-skill/
-├── SKILL.md         <- Claude Code (frontmatter + full reference)
-├── AGENTS.md        <- Codex / Gemini CLI / Amp (universal format)
-├── rules/           <- Cursor rules
+├── SKILL.md         <- Claude Code (YAML frontmatter + full reference)
+├── AGENTS.md        <- Codex / Gemini CLI / Amp / OpenClaw / Trae
+├── rules/           <- Cursor / Windsurf
 │   └── gnnwr-spatial-analysis.md
 ├── LICENSE
 └── README.md
@@ -66,6 +77,16 @@ The skill activates on keywords: spatial regression, GWR, GNNWR, GTNNWR, spatial
 ```bash
 pip install gnnwr
 ```
+
+Optional for advanced visualization:
+```bash
+pip install geopandas contextily folium matplotlib
+```
+
+## Related
+
+- [GNNWR source code](https://github.com/zjuwss/gnnwr) — the underlying PyTorch package
+- [GNNWR paper](https://doi.org/10.1080/13658816.2019.1707834) — Du et al. (2020), International Journal of Geographical Information Science
 
 ## License
 
