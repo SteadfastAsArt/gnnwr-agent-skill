@@ -22,7 +22,28 @@ Provides AI coding agents with complete API reference and workflow guidance for:
 npx skills add SteadfastAsArt/gnnwr-agent-skill
 ```
 
-This auto-detects installed agents and creates the appropriate symlinks.
+Auto-detects installed agents and creates the appropriate symlinks. Options:
+
+```bash
+# Install globally (all projects)
+npx skills add SteadfastAsArt/gnnwr-agent-skill -g
+
+# Target a specific agent
+npx skills add SteadfastAsArt/gnnwr-agent-skill -a claude-code
+npx skills add SteadfastAsArt/gnnwr-agent-skill -a cursor
+
+# Or install as part of the full geoscience-skills collection (30 skills)
+npx skills add SteadfastAsArt/geoscience-skills -s gnnwr
+```
+
+### Manage installed skills
+
+```bash
+npx skills list          # List installed skills
+npx skills check         # Check for updates
+npx skills update        # Update to latest versions
+npx skills remove gnnwr  # Remove skill
+```
 
 ### Manual install
 
