@@ -22,7 +22,28 @@ Provides AI coding agents with complete API reference and workflow guidance for:
 npx skills add SteadfastAsArt/gnnwr-agent-skill
 ```
 
-This auto-detects installed agents and creates the appropriate symlinks.
+Auto-detects installed agents and creates the appropriate symlinks. Options:
+
+```bash
+# Install globally (all projects)
+npx skills add SteadfastAsArt/gnnwr-agent-skill -g
+
+# Target a specific agent
+npx skills add SteadfastAsArt/gnnwr-agent-skill -a claude-code
+npx skills add SteadfastAsArt/gnnwr-agent-skill -a cursor
+
+# Or install as part of the full geoscience-skills collection (30 skills)
+npx skills add SteadfastAsArt/geoscience-skills -s gnnwr
+```
+
+### Manage installed skills
+
+```bash
+npx skills list          # List installed skills
+npx skills check         # Check for updates
+npx skills update        # Update to latest versions
+npx skills remove gnnwr  # Remove skill
+```
 
 ### Manual install
 
@@ -83,8 +104,13 @@ Optional for advanced visualization:
 pip install geopandas contextily folium matplotlib
 ```
 
+## Part of Geoscience Skills
+
+This skill is also included in the [geoscience-skills](https://github.com/SteadfastAsArt/geoscience-skills) collection (30 geoscience skills for AI coding agents), under the **Spatial Analysis & Geostatistics** category alongside verde, geostatspy, and scikit-gstat.
+
 ## Related
 
+- [Geoscience Skills](https://github.com/SteadfastAsArt/geoscience-skills) — 30 geoscience skills for AI coding agents
 - [GNNWR source code](https://github.com/zjuwss/gnnwr) — the underlying PyTorch package
 - [GNNWR paper](https://doi.org/10.1080/13658816.2019.1707834) — Du et al. (2020), International Journal of Geographical Information Science
 
